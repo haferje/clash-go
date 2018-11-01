@@ -2,30 +2,13 @@
 	<header>
 		<title></title>
 
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.4.0/gridstack.css" rel="stylesheet" />
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" type="text/javascript"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.4.0/gridstack.js" type="text/javascript"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/0.4.0/gridstack.jQueryUI.js" type="text/javascript"></script>
+		<script src="https://unpkg.com/hammerjs@2.0.8/hammer.min.js"></script>
+		<script src="https://unpkg.com/muuri@0.7.1/dist/muuri.min.js"></script>
 
 		<link rel="stylesheet" href="style.css">
 		<style>
-			.grid-stack > .grid-stack-item {
-				/*min-height: 10px;*/
-				min-width: 10px;
-				text-align: center;
-				vertical-align: middle;
-			}
-			.grid-stack-item {
-				border: 1px solid black;
-			}
-			.grid-stack {
-				/* background-color: #eeeeee; */
-				background-image: linear-gradient(#e0e0e0 1px, transparent 1px), linear-gradient(90deg, #e0e0e0 1px, transparent 0px), linear-gradient(rgba(255,255,255,.3) 5px, transparent 100px), linear-gradient(90deg, rgba(255,255,255,.3) 5px, transparent 100px);
-				background-size: 100px 62px, calc(8.33% + 0px) 100px, 20px 20px, 20px 20px;
-				background-position: -2px -2px, -1px -2px, -1px -1px, -1px -1px;
-			}
 
 			.weapon {
 				background-color: red;
@@ -41,34 +24,10 @@
 	</header>
 	<body>
 
-<div class="grid-stack">
-    <!-- <div class="grid-stack-item"
-        data-gs-x="0" data-gs-y="0"
-        data-gs-width="4" data-gs-height="2">
-            <div class="grid-stack-item-content">aa</div>
-    </div>
-    <div class="grid-stack-item"
-        data-gs-x="4" data-gs-y="0"
-        data-gs-width="4" data-gs-height="4">
-            <div class="grid-stack-item-content">asdf</div>
-    </div> -->
-</div>
+<div class="grid"></div>
 
 <script type="text/javascript">
 $(function () {
-
-    var options = {
-        alwaysShowResizeHandle: true,
-        cellHeight: 10,
-        float: true,
-        height: 100, // rows
-        placeholderText: 'move here',
-        verticalMargin: 0,
-        width: 100, // columns
-    };
-
-    var gs = $('.grid-stack').gridstack(options);
-    var grid = $('.grid-stack').data('gridstack');
 
     var items = [
     	{ name: 'weapon', width: 3, height: 3, count: 4 },
@@ -76,27 +35,167 @@ $(function () {
     	{ name: 'wall', width: 1, height: 1, count: 75 },
     ];
 
-    for (item of items) {
-    	var x = 0,
-			y = 0,
-			width = item.width,
-			height = item.height,
-			autoPosition = true;
 
-		for (var i in new Array(item.count).fill(0)) {
-			console.log('here');
-			// var el = $("<div/>")
-			// 	.addClass('grid-stack-item ui-draggable ui-resizable')
-			// 	.addClass(item.name)
-			// 	.append(
-			// 		$("<div/>")
-			// 			.addClass('grid-stack-item-content ui-draggable-handle')
-			// 			.text(item.name)
-			// 	);
-			var el = $('<div data-gs-no-resize="yes"><div class="grid-stack-item-content" /><div/>');
-	    	grid.addWidget(el, x, y, width, height, autoPosition);
-		}
+  //
+  // Initialize stuff
+  //
+
+  var grid = null;
+  var docElem = document.documentElement;
+  var characters = 'abcdefghijklmnopqrstuvwxyz';
+  var filterOptions = ['red', 'blue', 'green'];
+  var dragOrder = [];
+  var uuid = 0;
+
+  //
+  // Grid helper functions
+  //
+
+  function initDemo() {
+
+    initGrid();
+
+  }
+
+  function initGrid() {
+
+    var dragCounter = 0;
+
+    grid = new Muuri('.grid', {
+      items: generateElements(20),
+      layoutDuration: 400,
+      layoutEasing: 'ease',
+      dragEnabled: true,
+      dragSortInterval: 50,
+      dragContainer: document.body,
+      // dragStartPredicate: function (item, event) {
+      //   var isDraggable = sortFieldValue === 'order';
+      //   var isRemoveAction = elementMatches(event.target, '.card-remove, .card-remove i');
+      //   return isDraggable && !isRemoveAction ? Muuri.ItemDrag.defaultStartPredicate(item, event) : false;
+      // },
+      dragReleaseDuration: 400,
+      dragReleseEasing: 'ease'
+    })
+    .on('dragStart', function () {
+      ++dragCounter;
+      docElem.classList.add('dragging');
+    })
+    .on('dragEnd', function () {
+      if (--dragCounter < 1) {
+        docElem.classList.remove('dragging');
+      }
+    })
+    .on('move', updateIndices)
+    .on('sort', updateIndices);
+
+  }
+
+  function addItems() {
+
+    // Generate new elements.
+    var newElems = generateElements(5);
+
+    // Set the display of the new elements to "none" so it will be hidden by
+    // default.
+    newElems.forEach(function (item) {
+      item.style.display = 'none';
+    });
+
+    // Add the elements to the grid.
+    var newItems = grid.add(newElems);
+
+    // Update UI indices.
+    updateIndices();
+
+  }
+
+  //
+  // Generic helper functions
+  //
+
+  function generateElements(amount) {
+
+    var ret = [];
+
+    for (var i = 0; i < amount; i++) {
+      ret.push(generateElement(
+        ++uuid,
+        generateRandomWord(2),
+        getRandomItem(filterOptions),
+        getRandomInt(1, 2),
+        getRandomInt(1, 2)
+      ));
     }
+
+    return ret;
+
+  }
+
+  function generateElement(id, title, color, width, height) {
+
+    var itemElem = document.createElement('div');
+    var classNames = 'item h' + height + ' w' + width + ' ' + color;
+    var itemTemplate = '' +
+        '<div class="' + classNames + '" data-id="' + id + '" data-color="' + color + '" data-title="' + title + '">' +
+          '<div class="item-content">' +
+            '<div class="card">' +
+              '<div class="card-id">' + id + '</div>' +
+              '<div class="card-title">' + title + '</div>' +
+              '<div class="card-remove"><i class="material-icons">&#xE5CD;</i></div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+
+    itemElem.innerHTML = itemTemplate;
+    return itemElem.firstChild;
+
+  }
+
+  function getRandomItem(collection) {
+
+    return collection[Math.floor(Math.random() * collection.length)];
+
+  }
+
+  // https://stackoverflow.com/a/7228322
+  function getRandomInt(min,max) {
+
+    return Math.floor(Math.random() * (max - min + 1) + min);
+
+  }
+
+  function generateRandomWord(length) {
+
+    var ret = '';
+    for (var i = 0; i < length; i++) {
+      ret += getRandomItem(characters);
+    }
+    return ret;
+
+  }
+
+  function updateIndices() {
+
+    grid.getItems().forEach(function (item, i) {
+      item.getElement().setAttribute('data-id', i + 1);
+      item.getElement().querySelector('.card-id').innerHTML = i + 1;
+    });
+
+  }
+
+  function elementMatches(element, selector) {
+
+    var p = Element.prototype;
+    return (p.matches || p.matchesSelector || p.webkitMatchesSelector || p.mozMatchesSelector || p.msMatchesSelector || p.oMatchesSelector).call(element, selector);
+
+  }
+
+  //
+  // Fire it up!
+  //
+
+  initDemo();
+
 
 });
 </script>
