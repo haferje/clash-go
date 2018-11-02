@@ -1,95 +1,77 @@
+body {
+	margin: 0px;
+}
+
 .grid {
-  position: relative;
-  /* Control the height manually */
-  /* In this case we limit it to two rows */
-  height: 420px;
-  /*max-width: 960px;
-  margin: 0 -10px;
-  -moz-box-sizing: content-box;
-  -webkit-box-sizing: content-box;
-  box-sizing: content-box;*/
+	background-size: 20px 20px;
+	background-image: linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px);
+	min-height: 500px;
 }
 
-.item.muuri-item-hidden {
-  z-index: 0;
+/*.opac {
+	opacity: .7;
+}*/
+.move-cursor {
+	cursor: move;
 }
-.item.muuri-item-releasing {
-  z-index: 2;
-}
-.item.muuri-item-dragging {
-  z-index: 3;
-}
-.item-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  /*background: red;*/
-  font-size: 10px;
-  color: white;
-  cursor: pointer;
-}
-.item.muuri-item-dragging .item-content {
-  background: blue;
-}
-.item.muuri-item-releasing .item-content {
-  background: blueViolet;
+.grab-cursor {
+	cursor: grab;
+	cursor: -webkit-grab;
 }
 
-.item {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  line-height: 10px;
-  z-index: 1;
+.building {
+	overflow: hidden;
 }
-.item.h2 {
-  height: 40px;
-  line-height: 40px;
+.building.w1 {
+	width: 20px;
 }
-.item.w2 {
-  width: 40px;
+.building.h1 {
+	height: 20px;
+	line-height: 20px;
 }
-.item.h3 {
-  height: 60px;
-  line-height: 60px;
+.building.w2 {
+	width: 40px;
 }
-.item.w3 {
-  width: 60px;
+.building.h2 {
+	height: 40px;
+	line-height: 40px;
 }
-.item.h4 {
-  height: 80px;
-  line-height: 80px;
+.building.w3 {
+	width: 60px;
 }
-.item.w4 {
-  width: 80px;
+.building.h3 {
+	height: 60px;
+	line-height: 60px;
 }
-.item.h5 {
-  height: 100px;
-  line-height: 100px;
+.building.w4 {
+	width: 80px;
 }
-.item.w5 {
-  width: 100px;
+.building.h4 {
+	height: 80px;
+	line-height: 80px;
+}
+.building.w5 {
+	width: 100px;
+}
+.building.h5 {
+	height: 100px;
+	line-height: 100px;
 }
 
+.text {
+	margin-top: 0;
+	color: #fff;
+	text-align: center;
+	font-size: 28px;
+	letter-spacing: 1px;
+}
 
-
-
-      .weapon {
-        background-color: red;
-      }
-      .outpost {
-        background-color: blue;
-      }
-      .wall {
-        background-color: lightgray;
-      }
-
-
-  .grid {
-        background-size: 20px 20px;
-    background-image: linear-gradient(to right, grey 1px, transparent 1px), linear-gradient(to bottom, grey 1px, transparent 1px);
-        /*background-image: linear-gradient(#e0e0e0 1px, transparent 1px), linear-gradient(90deg, #e0e0e0 1px, transparent 0px), linear-gradient(rgba(255,255,255,.3) 5px, transparent 100px), linear-gradient(90deg, rgba(255,255,255,.3) 5px, transparent 100px);
-        background-size: 100px 62px, calc(8.33% + 0px) 100px, 20px 20px, 20px 20px;
-        background-position: -2px -2px, -1px -2px, -1px -1px, -1px -1px;*/
-      }
+.weapon {
+	background-color: red;
+}
+.outpost {
+	background-color: blue;
+}
+.wall {
+	background-color: lightgray;
+}

@@ -1,179 +1,119 @@
+<!DOCTYPE html>
 <html>
-	<header>
-		<title></title>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<head>
+		<title>Page Title</title>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
-		<script src="https://unpkg.com/hammerjs@2.0.8/hammer.min.js"></script>
-		<script src="https://unpkg.com/muuri@0.7.1/dist/muuri.min.js"></script>
-		<link rel="stylesheet" href="style.css">
-	</header>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
+		<link href="style.css" rel="stylesheet">
+	</head>
 	<body>
+
+		<style id="dynamic-style"></style>
 
 		<div class="grid"></div>
 
 		<script type="text/javascript">
+			var buildings = {
+				// Resources
+				asdf: { name: 'Construction Shop', width: 0, height: 0 },
+				asdf: { name: 'Titanium Mine', width: 0, height: 0 },
+				asdf: { name: 'Titanium Storage', width: 0, height: 0 },
+				asdf: { name: 'Helium-3 Separator', width: 0, height: 0 },
+				asdf: { name: 'Helium-3 Storage', width: 0, height: 0 },
+				// Army
+				asdf: { name: 'Military Plant', width: 0, height: 0 },
+				asdf: { name: 'Training Camp', width: 0, height: 0 },
+				asdf: { name: 'Nanobot Factory', width: 0, height: 0 },
+				asdf: { name: 'Science Lab', width: 0, height: 0 },
+				asdf: { name: 'Hero\'s Outpost', width: 0, height: 0 },
+				// Defense
+				asdf: { name: 'Gauss Cannon', width: 0, height: 0 },
+				asdf: { name: 'Plasma Gun', width: 0, height: 0 },
+				asdf: { name: 'Missile Launcher', width: 0, height: 0 },
+				asdf: { name: 'Laser Turret', width: 0, height: 0 },
+				asdf: { name: 'Proton Emitter', width: 0, height: 0 },
+				asdf: { name: 'Land Mine', width: 0, height: 0 },
+				asdf: { name: 'Force Field', width: 0, height: 0 },
+				asdf: { name: 'Annihilator', width: 0, height: 0 },
+				asdf: { name: 'Missile Pit', width: 0, height: 0 },
+				asdf: { name: 'Radioactive Trap', width: 0, height: 0 },
+				asdf: { name: 'Gravity Trap', width: 0, height: 0 },
+				asdf: { name: 'Pulse Tower', width: 0, height: 0 },
+				asdf: { name: 'Wall', width: 0, height: 0 },
+			};
+
+			var items = [
+				{ name: 'weapon', width: 3, height: 3, count: 4 },
+				{ name: 'outpost', width: 5, height: 5, count: 3 },
+				{ name: 'wall', width: 1, height: 1, count: 75 },
+			];
+
 			var grid = null;
+			var gridSize = 20;
 
 			$(function () {
 
-				var buildings = {
-					// Resources
-					asdf: { name: 'Construction Shop', width: 0, height: 0 },
-					asdf: { name: 'Titanium Mine', width: 0, height: 0 },
-					asdf: { name: 'Titanium Storage', width: 0, height: 0 },
-					asdf: { name: 'Helium-3 Separator', width: 0, height: 0 },
-					asdf: { name: 'Helium-3 Storage', width: 0, height: 0 },
-					// Army
-					asdf: { name: 'Military Plant', width: 0, height: 0 },
-					asdf: { name: 'Training Camp', width: 0, height: 0 },
-					asdf: { name: 'Nanobot Factory', width: 0, height: 0 },
-					asdf: { name: 'Science Lab', width: 0, height: 0 },
-					asdf: { name: 'Hero\'s Outpost', width: 0, height: 0 },
-					// Defense
-					asdf: { name: 'Gauss Cannon', width: 0, height: 0 },
-					asdf: { name: 'Plasma Gun', width: 0, height: 0 },
-					asdf: { name: 'Missile Launcher', width: 0, height: 0 },
-					asdf: { name: 'Laser Turret', width: 0, height: 0 },
-					asdf: { name: 'Proton Emitter', width: 0, height: 0 },
-					asdf: { name: 'Land Mine', width: 0, height: 0 },
-					asdf: { name: 'Force Field', width: 0, height: 0 },
-					asdf: { name: 'Annihilator', width: 0, height: 0 },
-					asdf: { name: 'Missile Pit', width: 0, height: 0 },
-					asdf: { name: 'Radioactive Trap', width: 0, height: 0 },
-					asdf: { name: 'Gravity Trap', width: 0, height: 0 },
-					asdf: { name: 'Pulse Tower', width: 0, height: 0 },
-					asdf: { name: 'Wall', width: 0, height: 0 },
-				};
+				addItems();
 
-				var items = [
-					{ name: 'weapon', width: 3, height: 3, count: 4 },
-					{ name: 'outpost', width: 5, height: 5, count: 3 },
-					{ name: 'wall', width: 1, height: 1, count: 75 },
-				];
-
-				function initDemo() {
-
-					initGrid();
-
-				}
-
-				function initGrid() {
-
-					grid = new Muuri('.grid', {
-						dragEnabled: true,
-						items: addItems(),
-						// dragSort: false,
-						layout: {
-							fillGaps: false,
-							horizontal: true,
+				// initialize drag/drop and snap-to-grid
+				$(".building")
+					.draggable({
+						grid: [gridSize, gridSize],
+						addClasses: false,
+						// cursor: "crosshair",
+						opacity: 0.7,
+						stop: function(event, ui) {
+							console.log(ui.position);
 						},
-						// layout: function (items, gridWidth, gridHeight) {
-						// 	var layout = this.layout(items, gridWidth, gridHeight);
-						// 	layout.width = 900;
-						// 	layout.height = 600;
-						// 	layout.setWidth = true;
-						// 	layout.setHeight = true;
-						// 	return layout;
-						// },
-						// layout: function (items, gridWidth, gridHeight) {
-						// 	// The layout data object. Muuri will read this data and position the items
-						// 	// based on it.
-						// 	var layout = {
-						// 		// The layout's item slots (left/top coordinates).
-						// 		slots: [],
-						// 		// The layout's total width.
-						// 		width: 0,
-						// 		// The layout's total height.
-						// 		height: 0,
-						// 		// Should Muuri set the grid's width after layout?
-						// 		setWidth: true,
-						// 		// Should Muuri set the grid's height after layout?
-						// 		setHeight: true
-						// 	};
-
-						// 	// Calculate the slots.
-						// 	var item;
-						// 	var m;
-						// 	var x = 0;
-						// 	var y = 0;
-						// 	var w = 0;
-						// 	var h = 0;
-						// 	for (var i = 0; i < items.length; i++) {
-						// 		item = items[i];
-						// 		x += w;
-						// 		y += h;
-						// 		m = item.getMargin();
-						// 		w = item.getWidth() + m.left + m.right;
-						// 		// h = item.getHeight() + m.top + m.bottom;
-						// 		h = 0;
-						// 		layout.slots.push(x, y);
-						// 	}
-
-						// 	// Calculate the layout's total width and height.
-						// 	layout.width = x + w;
-						// 	layout.height = y + h;
-
-						// 	return layout;
-						// },
+					})
+					// .on("dragstop", function() {
+					// 	console.log(ui.position);
+					// })
+					.on("mouseover", function() {
+						$(this).addClass("move-cursor");
+					})
+					.on("mousedown", function() {
+						$(this)
+							.removeClass("move-cursor")
+							.addClass("grab-cursor")
+							.addClass("opac");
+					})
+					.on("mouseup", function() {
+						$(this)
+							.removeClass("grab-cursor")
+							.removeClass("opac")
+							.addClass("move-cursor");
 					});
 
-					// grid = new Muuri('.grid', {
-					// 	items: generateElements(20),
-					// 	layoutDuration: 400,
-					// 	layoutEasing: 'ease',
-					// 	dragEnabled: true,
-					// 	dragSortInterval: 50,
-					// 	dragContainer: document.body,
-					// 	dragStartPredicate: function (item, event) {
-					// 		var isDraggable = sortFieldValue === 'order';
-					// 		var isRemoveAction = elementMatches(event.target, '.card-remove, .card-remove i');
-					// 		return isDraggable && !isRemoveAction ? Muuri.ItemDrag.defaultStartPredicate(item, event) : false;
-					// 	},
-					// 	dragReleaseDuration: 400,
-					// 	dragReleseEasing: 'ease'
-					// })
-					// .on('dragStart', function () {
-					// 	++dragCounter;
-					// 	docElem.classList.add('dragging');
-					// })
-					// .on('dragEnd', function () {
-					// 	if (--dragCounter < 1) {
-					// 		docElem.classList.remove('dragging');
-					// 	}
-					// })
-					// .on('move', updateIndices)
-					// .on('sort', updateIndices);
+			});
 
-		  		}
+			function addItems() {
+				var elements = [];
 
-				function addItems() {
-					var ret = [];
-
-					for (var item of items) {
-						for (var idx in _.range(item.count)) {
-
-							var itemElem = document.createElement('div');
-							var classNames = 'item h' + item.height + ' w' + item.width + ' ' + item.name;
-							var itemTemplate = '' +
-								// '<div class="' + classNames + '" data-id="' + id + '" data-color="' + color + '" data-title="' + title + '">' +
-								'<div class="' + classNames + '">' +
-									'<div class="item-content">' +
-										item.name +
-									'</div>' +
-								'</div>';
-
-							itemElem.innerHTML = itemTemplate;
-							ret.push(itemElem.firstChild);
-
-						}
+				for (var item of items) {
+					for (var idx in _.range(item.count)) {
+						elements.push(addItem(item));
 					}
-
-					return ret;
 				}
 
-				initDemo();
+				// return ret;
+				$(".grid").append(elements);
+			}
 
-			});
+			function addItem(item) {
+				var classes = `building h${item.height} w${item.width} ${item.name}`;
+				var template = `
+					<div class="${classes}">
+						<div class="text">
+							${item.name}
+						</div>
+					</div>`;
+
+				return $(template);
+			}
 		</script>
 
 	</body>
