@@ -14,6 +14,11 @@
 		</style>
 
 		<canvas id="gridCanvas" width="1200" height="800"></canvas>
+		<div>
+			<button id="export">Export</button>
+			<button id="load">Load</button>
+		</div>
+		<textarea id="output" rows="20" cols="100"></textarea>
 
 		<script type="text/javascript">
 
@@ -21,44 +26,56 @@
 				Red:		{ name: 'red',			hex: '#f00' },
 				Green:		{ name: 'green',		hex: '#0f0' },
 				Blue:		{ name: 'blue',			hex: '#00f' },
+				Grey:		{ name: 'blue',			hex: '#00f' },
 				LightGrey:	{ name: 'lightgrey',	hex: '#d3d3d3' },
+				LightBlue:	{ name: 'lightgrey',	hex: '#d3d3d3' },
+				Purple:		{ name: 'lightgrey',	hex: '#d3d3d3' },
 			};
 
 			var Buildings = {
+				// Base
+				ClanCitidel: 		{ name: 'Clan Citadel',			size: 3,	color: Colors.LightGrey },
+				CommandCenter: 		{ name: 'Command Center',		size: 4,	color: Colors.LightGrey },
 				// Resources
-				ConstructionShop: 	{ name: 'Construction Shop',	width: 0,	height: 0,	color: Colors.Red },
-				TitaniumMine: 		{ name: 'Titanium Mine',		width: 0,	height: 0,	color: Colors.Red },
-				TitaniumStorage: 	{ name: 'Titanium Storage',		width: 0,	height: 0,	color: Colors.Red },
-				HeliumSeparator: 	{ name: 'Helium-3 Separator',	width: 0,	height: 0,	color: Colors.Red },
-				HeliumStorage: 		{ name: 'Helium-3 Storage',		width: 0,	height: 0,	color: Colors.Red },
+				ConstructionShop: 	{ name: 'Construction Shop',	size: 2,	color: Colors.LightBlue },
+				TitaniumMine: 		{ name: 'Titanium Mine',		size: 3,	color: Colors.Red },
+				TitaniumStorage: 	{ name: 'Titanium Storage',		size: 3,	color: Colors.Red },
+				HeliumSeparator: 	{ name: 'Helium-3 Separator',	size: 3,	color: Colors.Red },
+				HeliumStorage: 		{ name: 'Helium-3 Storage',		size: 3,	color: Colors.Red },
 				// Army
-				MilitaryPlant: 		{ name: 'Military Plant',		width: 0,	height: 0,	color: Colors.Red },
-				TrainingCamp: 		{ name: 'Training Camp',		width: 5,	height: 5,	color: Colors.Blue },
-				NanobotFactory: 	{ name: 'Nanobot Factory',		width: 0,	height: 0,	color: Colors.Red },
-				ScienceLab: 		{ name: 'Science Lab',			width: 0,	height: 0,	color: Colors.Red },
-				HerosOutpost: 		{ name: 'Hero\'s Outpost',		width: 0,	height: 0,	color: Colors.Red },
+				MilitaryPlant: 		{ name: 'Military Plant',		size: 3,	color: Colors.LightGrey },
+				TrainingCamp: 		{ name: 'Training Camp',		size: 5,	color: Colors.Grey },
+				NanobotFactory: 	{ name: 'Nanobot Factory',		size: 3,	color: Colors.Red },
+				ScienceLab: 		{ name: 'Science Lab',			size: 4,	color: Colors.Red },
+				HerosOutpost: 		{ name: 'Hero\'s Outpost',		size: 3,	color: Colors.Red },
 				// Defense
-				GaussCannon: 		{ name: 'Gauss Cannon',			width: 3,	height: 3,	color: Colors.Red },
-				PlasmaGun: 			{ name: 'Plasma Gun',			width: 0,	height: 0,	color: Colors.Red },
-				MissileLauncher: 	{ name: 'Missile Launcher',		width: 0,	height: 0,	color: Colors.Red },
-				LaserTurret: 		{ name: 'Laser Turret',			width: 0,	height: 0,	color: Colors.Red },
-				ProtonEmitter: 		{ name: 'Proton Emitter',		width: 0,	height: 0,	color: Colors.Red },
-				LandMine: 			{ name: 'Land Mine',			width: 0,	height: 0,	color: Colors.Red },
-				ForceField: 		{ name: 'Force Field',			width: 0,	height: 0,	color: Colors.Red },
-				Annihilator: 		{ name: 'Annihilator',			width: 0,	height: 0,	color: Colors.Red },
-				MissilePit: 		{ name: 'Missile Pit',			width: 0,	height: 0,	color: Colors.Red },
-				RadioactiveTrap: 	{ name: 'Radioactive Trap',		width: 0,	height: 0,	color: Colors.Red },
-				GravityTrap: 		{ name: 'Gravity Trap',			width: 0,	height: 0,	color: Colors.Red },
-				PulseTower: 		{ name: 'Pulse Tower',			width: 0,	height: 0,	color: Colors.Red },
-				Wall: 				{ name: 'Wall',					width: 1,	height: 1,	color: Colors.LightGrey },
+				GaussCannon: 		{ name: 'Gauss Cannon',			size: 3,	color: Colors.Red },
+				PlasmaGun: 			{ name: 'Plasma Gun',			size: 3,	color: Colors.Red },
+				MissileLauncher: 	{ name: 'Missile Launcher',		size: 3,	color: Colors.Red },
+				LaserTurret: 		{ name: 'Laser Turret',			size: 3,	color: Colors.Red },
+				ProtonEmitter: 		{ name: 'Proton Emitter',		size: 0,	color: Colors.Red },
+				LandMine: 			{ name: 'Land Mine',			size: 1,	color: Colors.Red },
+				ForceField: 		{ name: 'Force Field',			size: 2,	color: Colors.LightGrey },
+				Annihilator: 		{ name: 'Annihilator',			size: 1,	color: Colors.Red },
+				MissilePit: 		{ name: 'Missile Pit',			size: 1,	color: Colors.Red },
+				RadioactiveTrap: 	{ name: 'Radioactive Trap',		size: 0,	color: Colors.Red },
+				GravityTrap: 		{ name: 'Gravity Trap',			size: 0,	color: Colors.Red },
+				PulseTower: 		{ name: 'Pulse Tower',			size: 0,	color: Colors.Red },
+				ShieldGenerator:	{ name: 'Shield Generator',		size: 0,	color: Colors.Red },
+				Wall: 				{ name: 'Wall',					size: 1,	color: Colors.LightGrey },
 				// Terrain
-				Wall: 				{ name: 'Wall',					width: 1,	height: 1,	color: Colors.LightGrey },
+				Crater2: 			{ name: 'Crater',				size: 2,	color: Colors.Purple },
+				Geyser: 			{ name: 'Geyser',				size: 2,	color: Colors.Purple },
+				Meteorite: 			{ name: 'Meteorite',			size: 2,	color: Colors.Purple },
+				Volcano2: 			{ name: 'Volcano',				size: 2,	color: Colors.Purple },
+				Crater3: 			{ name: 'Crater',				size: 3,	color: Colors.Purple },
+				Volcano3: 			{ name: 'Volcano',				size: 3,	color: Colors.Purple },
 			};
 
 			var inventory = [
-				{ building: Buildings.GaussCannon,	count: 1},//4 },
-				{ building: Buildings.TrainingCamp,	count: 1},//3 },
-				{ building: Buildings.Wall,			count: 4},//75 },
+				{ building: "GaussCannon",	top: 20,	left: 20 },
+				{ building: "TrainingCamp",	top: 120,	left: 80 },
+				{ building: "Wall",			top: 40,	left: 100 },
 			];
 
 			var canvas = null;
@@ -68,174 +85,202 @@
 
 			$(function () {
 
-				canvas = new fabric.Canvas('gridCanvas', { selection: true });
-				size = Math.max(canvas.width, canvas.height);
+				canvas = new fabric.Canvas('gridCanvas', { selection: true })
+					.on({
+						'object:moving': onObjectMoving,
+						'object:moved': onObjectMoved,
+						'mouse:wheel': onMouseWheel,
+						'mouse:down': onMouseDown,
+						'mouse:move': onMouseMove,
+						'mouse:up': onMouseUp,
+					});
 
 				fabric.Group.prototype.hasControls = false; // no group resize/rotate
 
-				// create grid
+				size = Math.max(canvas.width, canvas.height);
 
+				drawGrid();
+				loadItems(inventory);
+
+				// tools
+				var $output = $("#output");
+				$("button#export").click(() => $output.text(JSON.stringify(exportItems())));
+				$("button#load").click(() => loadItems(JSON.parse($output.text())));
+
+			});
+
+			function clearItems() {
+				canvas.remove(..._.filter(canvas.getObjects(), o => o.type !== 'line'));
+			}
+
+			function drawGrid() {
 				for (var i = 0; i < (size / cellSize); i++) {
 					canvas.add(new fabric.Line([ i * cellSize, 0, i * cellSize, size], { stroke: '#ccc', selectable: false }));
 					canvas.add(new fabric.Line([ 0, i * cellSize, size, i * cellSize], { stroke: '#ccc', selectable: false }));
 				}
+			}
 
-				// add objects
+			function addItem(buildingKey) {
+				loadItem({
+					building: buildingKey,
+					top: 0,
+					left: 0,
+				});
+			}
 
-				for (var item of inventory) {
-					var building = item.building;
+			function loadItems(items) {
+				clearItems();
 
-					for (var idx in _.range(item.count)) {
+				for (var item of items) {
+					loadItem(item);
+				}
+			}
 
-						// var rect = new fabric.Rect({
-						let rect = new fabric.Rect({
-							left: 0,
-							top: 0,
-							width: cellSize * building.width,
-							height: cellSize * building.height,
-							originX: 'left',
-							originY: 'top',
-							fill: building.color.hex,
-							centeredRotation: true,
-							hasControls: false, // no resize/rotate
-						});
+			function loadItem(item) {
+				let rect, text, group;
+				var building = Buildings[item.building];
 
-						var text = new fabric.Text(building.name, {
-							top: 0,
-							left: 0,
-							// fontSize: 10,
-							fontWeight: 300,
-							fontFamily: "Helvetica",
-							fill: "white",
-							// clipTo: function(ctx) {
-							// 	ctx.rect(
-							// 		// top left from text center
-							// 		-this.width/2,
-							// 		-this.height/2,
-							// 		// size
-							// 		rect.width,
-							// 		this.height
-							// 	);
-							// },
-							// width: rect.width,
-						});
-						// text.clipTo = (function(rect) {
-						// 	return function(ctx) {
-						// 		ctx.rect(
-						// 			// top left from text center
-						// 			-this.width/2,
-						// 			-this.height/2,
-						// 			// size
-						// 			rect.width,
-						// 			this.height
-						// 		);
-						// 	}
-						// })(rect);
-						text.scaleToWidth(rect.width);
+				rect = new fabric.Rect({
+					left: 0,
+					top: 0,
+					width: cellSize * building.size,
+					height: cellSize * building.size,
+					originX: 'left',
+					originY: 'top',
+					fill: building.color.hex,
+					centeredRotation: true,
+					hasControls: false, // no resize/rotate
+				});
 
-						var group = new fabric.Group([rect, text], {
-							left: 0,
-							top: 0,
-						});
-						// custom properties
-						group.my = {
-							building: item.building,
-							top: group.top,
-							left: group.left,
-						};
+				text = new fabric.Text(building.name, {
+					top: 0,
+					left: 0,
+					// fontSize: 10,
+					fontWeight: 300,
+					fontFamily: "Helvetica",
+					fill: "white",
+				});
+				text.scaleToWidth(rect.width);
 
-						canvas.add(group);
-					}
+				group = new fabric.Group([rect, text], {
+					top: item.top,
+					left: item.left,
+				});
+
+				// custom properties
+
+				group.my = {
+					building: item.building,
+					top: group.top,
+					left: group.left,
+				};
+
+				canvas.add(group);
+			}
+
+			function updateObjectPositions() {
+				var objects = canvas.getObjects();
+				for (let i = 0; i < objects.length; i++) {
+					objects[i].setCoords();
+				}
+			}
+
+			function onObjectMoving(options) {
+				options.target.set({
+					left: Math.round(options.target.left / cellSize) * cellSize,
+					top: Math.round(options.target.top / cellSize) * cellSize,
+				});
+			}
+
+			// track movement in custom properties
+			function onObjectMoved(options) {
+				var target = options.target;
+
+				// selection of objects
+				if (target.type === 'activeSelection')
+					// calculate group position on grid
+					_.each(target.getObjects(), t => {
+						t.my.top = t.top + t.group.top + t.group.height/2;
+						t.my.left = t.left + t.group.left + t.group.width/2
+					});
+				// single object
+				else {
+					target.my.top = target.top;
+					target.my.left = target.left;
+				}
+			}
+
+			// zoom
+			function onMouseWheel(opt) {
+				var delta = opt.e.deltaY;
+				var zoom = canvas.getZoom();
+
+				zoom = zoom - delta/1000;
+
+				if (zoom > 20) zoom = 20;
+				if (zoom < 0.01) zoom = 0.01;
+
+				canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+				opt.e.preventDefault();
+				opt.e.stopPropagation();
+
+				var vpt = this.viewportTransform;
+				if (zoom < 400 / 1000) {
+					this.viewportTransform[4] = 200 - 1000 * zoom / 2;
+					this.viewportTransform[5] = 200 - 1000 * zoom / 2;
+				}
+				else {
+					if (vpt[4] >= 0)
+						this.viewportTransform[4] = 0;
+					else if (vpt[4] < canvas.getWidth() - 1000 * zoom)
+						this.viewportTransform[4] = canvas.getWidth() - 1000 * zoom;
+
+					if (vpt[5] >= 0)
+						this.viewportTransform[5] = 0;
+					else if (vpt[5] < canvas.getHeight() - 1000 * zoom)
+						this.viewportTransform[5] = canvas.getHeight() - 1000 * zoom;
 				}
 
-				// snap to grid
+				updateObjectPositions();
+			}
 
-				canvas
-					.on('object:moving', function(options) {
-						options.target.set({
-							left: Math.round(options.target.left / cellSize) * cellSize,
-							top: Math.round(options.target.top / cellSize) * cellSize,
-						});
-					})
-					.on('object:moved', function(options) {
-						var target = options.target;
+			// pan
+			function onMouseDown(opt) {
+				var evt = opt.e;
 
-						if (target.type === 'activeSelection')
-							_.each(target.getObjects(), t => {
-								t.my.top = t.top + t.group.top + t.group.height/2;
-								t.my.left = t.left + t.group.left + t.group.width/2
-							});
-						else {
-							target.my.top = target.top;
-							target.my.left = target.left;
-						}
-					})
-				.on('mouse:wheel', function(opt) {
-					var delta = opt.e.deltaY;
-					var zoom = canvas.getZoom();
-					zoom = zoom - delta/1000;
-					if (zoom > 20) zoom = 20;
-					if (zoom < 0.01) zoom = 0.01;
-					canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-					opt.e.preventDefault();
-					opt.e.stopPropagation();
-					var vpt = this.viewportTransform;
-					if (zoom < 400 / 1000) {
-						this.viewportTransform[4] = 200 - 1000 * zoom / 2;
-						this.viewportTransform[5] = 200 - 1000 * zoom / 2;
-					} else {
-						if (vpt[4] >= 0) {
-							this.viewportTransform[4] = 0;
-						} else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
-							this.viewportTransform[4] = canvas.getWidth() - 1000 * zoom;
-						}
-						if (vpt[5] >= 0) {
-							this.viewportTransform[5] = 0;
-						} else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
-							this.viewportTransform[5] = canvas.getHeight() - 1000 * zoom;
-						}
-					}
-					var objects = this.getObjects();
-					for (let i=0; i<objects.length; i++) {
-						objects[i].setCoords();
-					}
-				})
-				.on('mouse:down', function(opt) {
-					var evt = opt.e;
-					if (evt.altKey === true) {
-						this.isDragging = true;
-						this.selection = false;
-						this.lastPosX = evt.clientX;
-						this.lastPosY = evt.clientY;
-					}
-				})
-				.on('mouse:move', function(opt) {
-					if (this.isDragging) {
-						var e = opt.e;
-						this.viewportTransform[4] += e.clientX - this.lastPosX;
-						this.viewportTransform[5] += e.clientY - this.lastPosY;
-						this.requestRenderAll();
-						this.lastPosX = e.clientX;
-						this.lastPosY = e.clientY;
-					}
-				})
-				.on('mouse:up', function(opt) {
-					this.isDragging = false;
-					this.selection = true;
-					var objects = this.getObjects();
-					for (let i=0; i<objects.length; i++) {
-						objects[i].setCoords();
-					}
-				})
-				;
+				if (!evt.ctrlKey)
+					return;
 
-			});
+				this.isDragging = true;
+				this.selection = false;
+				this.lastPosX = evt.clientX;
+				this.lastPosY = evt.clientY;
+			}
 
-			function shapes() {
+			function onMouseMove(opt) {
+				if (!this.isDragging)
+					return;
+
+				var e = opt.e;
+				this.viewportTransform[4] += e.clientX - this.lastPosX;
+				this.viewportTransform[5] += e.clientY - this.lastPosY;
+				this.requestRenderAll();
+				this.lastPosX = e.clientX;
+				this.lastPosY = e.clientY;
+			}
+
+			function onMouseUp(opt) {
+				this.isDragging = false;
+				this.selection = true;
+
+				updateObjectPositions();
+			}
+
+			function exportItems() {
 				return _(canvas.getObjects())
-						.filter(o => o.type === 'group')
-						.map(o => o.my)
-						.value();
+					.filter(o => o.type === 'group')
+					.map(o => o.my)
+					.value();
 			}
 
 		</script>
