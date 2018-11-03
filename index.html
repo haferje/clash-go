@@ -4,116 +4,240 @@
 		<title>Page Title</title>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/2.4.3/fabric.min.js"></script>
 
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet">
 		<link href="style.css" rel="stylesheet">
 	</head>
 	<body>
 
-		<style id="dynamic-style"></style>
+		<style>
+		</style>
 
-		<div class="grid"></div>
+		<canvas id="gridCanvas" width="1200" height="800"></canvas>
 
 		<script type="text/javascript">
-			var buildings = {
-				// Resources
-				asdf: { name: 'Construction Shop', width: 0, height: 0 },
-				asdf: { name: 'Titanium Mine', width: 0, height: 0 },
-				asdf: { name: 'Titanium Storage', width: 0, height: 0 },
-				asdf: { name: 'Helium-3 Separator', width: 0, height: 0 },
-				asdf: { name: 'Helium-3 Storage', width: 0, height: 0 },
-				// Army
-				asdf: { name: 'Military Plant', width: 0, height: 0 },
-				asdf: { name: 'Training Camp', width: 0, height: 0 },
-				asdf: { name: 'Nanobot Factory', width: 0, height: 0 },
-				asdf: { name: 'Science Lab', width: 0, height: 0 },
-				asdf: { name: 'Hero\'s Outpost', width: 0, height: 0 },
-				// Defense
-				asdf: { name: 'Gauss Cannon', width: 0, height: 0 },
-				asdf: { name: 'Plasma Gun', width: 0, height: 0 },
-				asdf: { name: 'Missile Launcher', width: 0, height: 0 },
-				asdf: { name: 'Laser Turret', width: 0, height: 0 },
-				asdf: { name: 'Proton Emitter', width: 0, height: 0 },
-				asdf: { name: 'Land Mine', width: 0, height: 0 },
-				asdf: { name: 'Force Field', width: 0, height: 0 },
-				asdf: { name: 'Annihilator', width: 0, height: 0 },
-				asdf: { name: 'Missile Pit', width: 0, height: 0 },
-				asdf: { name: 'Radioactive Trap', width: 0, height: 0 },
-				asdf: { name: 'Gravity Trap', width: 0, height: 0 },
-				asdf: { name: 'Pulse Tower', width: 0, height: 0 },
-				asdf: { name: 'Wall', width: 0, height: 0 },
+
+			var Colors = {
+				Red:		{ name: 'red',			hex: '#f00' },
+				Green:		{ name: 'green',		hex: '#0f0' },
+				Blue:		{ name: 'blue',			hex: '#00f' },
+				LightGrey:	{ name: 'lightgrey',	hex: '#d3d3d3' },
 			};
 
-			var items = [
-				{ name: 'weapon', width: 3, height: 3, count: 4 },
-				{ name: 'outpost', width: 5, height: 5, count: 3 },
-				{ name: 'wall', width: 1, height: 1, count: 75 },
+			var Buildings = {
+				// Resources
+				ConstructionShop: 	{ name: 'Construction Shop',	width: 0,	height: 0,	color: Colors.Red },
+				TitaniumMine: 		{ name: 'Titanium Mine',		width: 0,	height: 0,	color: Colors.Red },
+				TitaniumStorage: 	{ name: 'Titanium Storage',		width: 0,	height: 0,	color: Colors.Red },
+				HeliumSeparator: 	{ name: 'Helium-3 Separator',	width: 0,	height: 0,	color: Colors.Red },
+				HeliumStorage: 		{ name: 'Helium-3 Storage',		width: 0,	height: 0,	color: Colors.Red },
+				// Army
+				MilitaryPlant: 		{ name: 'Military Plant',		width: 0,	height: 0,	color: Colors.Red },
+				TrainingCamp: 		{ name: 'Training Camp',		width: 5,	height: 5,	color: Colors.Blue },
+				NanobotFactory: 	{ name: 'Nanobot Factory',		width: 0,	height: 0,	color: Colors.Red },
+				ScienceLab: 		{ name: 'Science Lab',			width: 0,	height: 0,	color: Colors.Red },
+				HerosOutpost: 		{ name: 'Hero\'s Outpost',		width: 0,	height: 0,	color: Colors.Red },
+				// Defense
+				GaussCannon: 		{ name: 'Gauss Cannon',			width: 3,	height: 3,	color: Colors.Red },
+				PlasmaGun: 			{ name: 'Plasma Gun',			width: 0,	height: 0,	color: Colors.Red },
+				MissileLauncher: 	{ name: 'Missile Launcher',		width: 0,	height: 0,	color: Colors.Red },
+				LaserTurret: 		{ name: 'Laser Turret',			width: 0,	height: 0,	color: Colors.Red },
+				ProtonEmitter: 		{ name: 'Proton Emitter',		width: 0,	height: 0,	color: Colors.Red },
+				LandMine: 			{ name: 'Land Mine',			width: 0,	height: 0,	color: Colors.Red },
+				ForceField: 		{ name: 'Force Field',			width: 0,	height: 0,	color: Colors.Red },
+				Annihilator: 		{ name: 'Annihilator',			width: 0,	height: 0,	color: Colors.Red },
+				MissilePit: 		{ name: 'Missile Pit',			width: 0,	height: 0,	color: Colors.Red },
+				RadioactiveTrap: 	{ name: 'Radioactive Trap',		width: 0,	height: 0,	color: Colors.Red },
+				GravityTrap: 		{ name: 'Gravity Trap',			width: 0,	height: 0,	color: Colors.Red },
+				PulseTower: 		{ name: 'Pulse Tower',			width: 0,	height: 0,	color: Colors.Red },
+				Wall: 				{ name: 'Wall',					width: 1,	height: 1,	color: Colors.LightGrey },
+				// Terrain
+				Wall: 				{ name: 'Wall',					width: 1,	height: 1,	color: Colors.LightGrey },
+			};
+
+			var inventory = [
+				{ building: Buildings.GaussCannon,	count: 1},//4 },
+				{ building: Buildings.TrainingCamp,	count: 1},//3 },
+				{ building: Buildings.Wall,			count: 4},//75 },
 			];
 
+			var canvas = null;
+			var size = 0;
 			var grid = null;
-			var gridSize = 20;
+			var cellSize = 20;
 
 			$(function () {
 
-				addItems();
+				canvas = new fabric.Canvas('gridCanvas', { selection: true });
+				size = Math.max(canvas.width, canvas.height);
 
-				// initialize drag/drop and snap-to-grid
-				$(".building")
-					.draggable({
-						grid: [gridSize, gridSize],
-						addClasses: false,
-						// cursor: "crosshair",
-						opacity: 0.7,
-						stop: function(event, ui) {
-							console.log(ui.position);
-						},
-					})
-					// .on("dragstop", function() {
-					// 	console.log(ui.position);
-					// })
-					.on("mouseover", function() {
-						$(this).addClass("move-cursor");
-					})
-					.on("mousedown", function() {
-						$(this)
-							.removeClass("move-cursor")
-							.addClass("grab-cursor")
-							.addClass("opac");
-					})
-					.on("mouseup", function() {
-						$(this)
-							.removeClass("grab-cursor")
-							.removeClass("opac")
-							.addClass("move-cursor");
-					});
+				fabric.Group.prototype.hasControls = false; // no group resize/rotate
 
-			});
+				// create grid
 
-			function addItems() {
-				var elements = [];
+				for (var i = 0; i < (size / cellSize); i++) {
+					canvas.add(new fabric.Line([ i * cellSize, 0, i * cellSize, size], { stroke: '#ccc', selectable: false }));
+					canvas.add(new fabric.Line([ 0, i * cellSize, size, i * cellSize], { stroke: '#ccc', selectable: false }));
+				}
 
-				for (var item of items) {
+				// add objects
+
+				for (var item of inventory) {
+					var building = item.building;
+
 					for (var idx in _.range(item.count)) {
-						elements.push(addItem(item));
+
+						// var rect = new fabric.Rect({
+						let rect = new fabric.Rect({
+							left: 0,
+							top: 0,
+							width: cellSize * building.width,
+							height: cellSize * building.height,
+							originX: 'left',
+							originY: 'top',
+							fill: building.color.hex,
+							centeredRotation: true,
+							hasControls: false, // no resize/rotate
+						});
+
+						var text = new fabric.Text(building.name, {
+							top: 0,
+							left: 0,
+							// fontSize: 10,
+							fontWeight: 300,
+							fontFamily: "Helvetica",
+							fill: "white",
+							// clipTo: function(ctx) {
+							// 	ctx.rect(
+							// 		// top left from text center
+							// 		-this.width/2,
+							// 		-this.height/2,
+							// 		// size
+							// 		rect.width,
+							// 		this.height
+							// 	);
+							// },
+							// width: rect.width,
+						});
+						// text.clipTo = (function(rect) {
+						// 	return function(ctx) {
+						// 		ctx.rect(
+						// 			// top left from text center
+						// 			-this.width/2,
+						// 			-this.height/2,
+						// 			// size
+						// 			rect.width,
+						// 			this.height
+						// 		);
+						// 	}
+						// })(rect);
+						text.scaleToWidth(rect.width);
+
+						var group = new fabric.Group([rect, text], {
+							left: 0,
+							top: 0,
+						});
+						// custom properties
+						group.my = {
+							building: item.building,
+							top: group.top,
+							left: group.left,
+						};
+
+						canvas.add(group);
 					}
 				}
 
-				// return ret;
-				$(".grid").append(elements);
+				// snap to grid
+
+				canvas
+					.on('object:moving', function(options) {
+						options.target.set({
+							left: Math.round(options.target.left / cellSize) * cellSize,
+							top: Math.round(options.target.top / cellSize) * cellSize,
+						});
+					})
+					.on('object:moved', function(options) {
+						var target = options.target;
+
+						if (target.type === 'activeSelection')
+							_.each(target.getObjects(), t => {
+								t.my.top = t.top + t.group.top + t.group.height/2;
+								t.my.left = t.left + t.group.left + t.group.width/2
+							});
+						else {
+							target.my.top = target.top;
+							target.my.left = target.left;
+						}
+					})
+				.on('mouse:wheel', function(opt) {
+					var delta = opt.e.deltaY;
+					var zoom = canvas.getZoom();
+					zoom = zoom - delta/1000;
+					if (zoom > 20) zoom = 20;
+					if (zoom < 0.01) zoom = 0.01;
+					canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+					opt.e.preventDefault();
+					opt.e.stopPropagation();
+					var vpt = this.viewportTransform;
+					if (zoom < 400 / 1000) {
+						this.viewportTransform[4] = 200 - 1000 * zoom / 2;
+						this.viewportTransform[5] = 200 - 1000 * zoom / 2;
+					} else {
+						if (vpt[4] >= 0) {
+							this.viewportTransform[4] = 0;
+						} else if (vpt[4] < canvas.getWidth() - 1000 * zoom) {
+							this.viewportTransform[4] = canvas.getWidth() - 1000 * zoom;
+						}
+						if (vpt[5] >= 0) {
+							this.viewportTransform[5] = 0;
+						} else if (vpt[5] < canvas.getHeight() - 1000 * zoom) {
+							this.viewportTransform[5] = canvas.getHeight() - 1000 * zoom;
+						}
+					}
+					var objects = this.getObjects();
+					for (let i=0; i<objects.length; i++) {
+						objects[i].setCoords();
+					}
+				})
+				.on('mouse:down', function(opt) {
+					var evt = opt.e;
+					if (evt.altKey === true) {
+						this.isDragging = true;
+						this.selection = false;
+						this.lastPosX = evt.clientX;
+						this.lastPosY = evt.clientY;
+					}
+				})
+				.on('mouse:move', function(opt) {
+					if (this.isDragging) {
+						var e = opt.e;
+						this.viewportTransform[4] += e.clientX - this.lastPosX;
+						this.viewportTransform[5] += e.clientY - this.lastPosY;
+						this.requestRenderAll();
+						this.lastPosX = e.clientX;
+						this.lastPosY = e.clientY;
+					}
+				})
+				.on('mouse:up', function(opt) {
+					this.isDragging = false;
+					this.selection = true;
+					var objects = this.getObjects();
+					for (let i=0; i<objects.length; i++) {
+						objects[i].setCoords();
+					}
+				})
+				;
+
+			});
+
+			function shapes() {
+				return _(canvas.getObjects())
+						.filter(o => o.type === 'group')
+						.map(o => o.my)
+						.value();
 			}
 
-			function addItem(item) {
-				var classes = `building h${item.height} w${item.width} ${item.name}`;
-				var template = `
-					<div class="${classes}">
-						<div class="text">
-							${item.name}
-						</div>
-					</div>`;
-
-				return $(template);
-			}
 		</script>
 
 	</body>
