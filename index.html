@@ -21,47 +21,55 @@
 		<textarea id="output" rows="20" cols="100"></textarea>
 
 		<script type="text/javascript">
+			// TODO:
+			// - change color of item if overlapping another
+			// - when adding items, add them in an open spot
 
 			var Colors = {
-				Red:		{ name: 'red',			hex: '#f00' },
-				Green:		{ name: 'green',		hex: '#0f0' },
+				Black:		{ name: 'black',		hex: '#fff' },
 				Blue:		{ name: 'blue',			hex: '#00f' },
-				Grey:		{ name: 'blue',			hex: '#00f' },
+				Green:		{ name: 'green',		hex: '#0f0' },
 				LightGrey:	{ name: 'lightgrey',	hex: '#d3d3d3' },
-				LightBlue:	{ name: 'lightgrey',	hex: '#d3d3d3' },
-				Purple:		{ name: 'lightgrey',	hex: '#d3d3d3' },
+				Red:		{ name: 'red',			hex: '#f00' },
+				White:		{ name: 'white',		hex: '#000' },
+				Yellow:		{ name: 'yellow',		hex: '#ff0' },
+				DarkGreen:	{ name: 'darkgreen',		hex: '#030' },
+				//
+				Grey:		{ name: 'grey',			hex: '#666' },
+				LightBlue:	{ name: 'lightblue',	hex: '#09f' },
+				Purple:		{ name: 'purple',		hex: '#636' },
 			};
 
 			var Buildings = {
 				// Base
-				ClanCitidel: 		{ name: 'Clan Citadel',			size: 3,	color: Colors.LightGrey },
-				CommandCenter: 		{ name: 'Command Center',		size: 4,	color: Colors.LightGrey },
+				ClanCitidel: 		{ name: 'Clan Citadel',			size: 3,	color: Colors.LightBlue },
+				CommandCenter: 		{ name: 'Command Center',		size: 4,	color: Colors.LightBlue },
 				// Resources
-				ConstructionShop: 	{ name: 'Construction Shop',	size: 2,	color: Colors.LightBlue },
-				TitaniumMine: 		{ name: 'Titanium Mine',		size: 3,	color: Colors.Red },
-				TitaniumStorage: 	{ name: 'Titanium Storage',		size: 3,	color: Colors.Red },
-				HeliumSeparator: 	{ name: 'Helium-3 Separator',	size: 3,	color: Colors.Red },
-				HeliumStorage: 		{ name: 'Helium-3 Storage',		size: 3,	color: Colors.Red },
+				ConstructionShop: 	{ name: 'Construction Shop',	size: 2,	color: Colors.Blue },
+				TitaniumMine: 		{ name: 'Titanium Mine',		size: 3,	color: Colors.Yellow },
+				TitaniumStorage: 	{ name: 'Titanium Storage',		size: 3,	color: Colors.Yellow },
+				HeliumSeparator: 	{ name: 'Helium-3 Separator',	size: 3,	color: Colors.Yellow },
+				HeliumStorage: 		{ name: 'Helium-3 Storage',		size: 3,	color: Colors.Yellow },
 				// Army
-				MilitaryPlant: 		{ name: 'Military Plant',		size: 3,	color: Colors.LightGrey },
-				TrainingCamp: 		{ name: 'Training Camp',		size: 5,	color: Colors.Grey },
-				NanobotFactory: 	{ name: 'Nanobot Factory',		size: 3,	color: Colors.Red },
-				ScienceLab: 		{ name: 'Science Lab',			size: 4,	color: Colors.Red },
-				HerosOutpost: 		{ name: 'Hero\'s Outpost',		size: 3,	color: Colors.Red },
+				MilitaryPlant: 		{ name: 'Military Plant',		size: 3,	color: Colors.Green },
+				TrainingCamp: 		{ name: 'Training Camp',		size: 5,	color: Colors.Green },
+				NanobotFactory: 	{ name: 'Nanobot Factory',		size: 3,	color: Colors.Blue },
+				ScienceLab: 		{ name: 'Science Lab',			size: 4,	color: Colors.Blue },
+				HerosOutpost: 		{ name: 'Hero\'s Outpost',		size: 3,	color: Colors.Blue },
 				// Defense
 				GaussCannon: 		{ name: 'Gauss Cannon',			size: 3,	color: Colors.Red },
 				PlasmaGun: 			{ name: 'Plasma Gun',			size: 3,	color: Colors.Red },
 				MissileLauncher: 	{ name: 'Missile Launcher',		size: 3,	color: Colors.Red },
 				LaserTurret: 		{ name: 'Laser Turret',			size: 3,	color: Colors.Red },
-				ProtonEmitter: 		{ name: 'Proton Emitter',		size: 0,	color: Colors.Red },
+				ProtonEmitter: 		{ name: 'Proton Emitter',		size: 3,	color: Colors.Red },
 				LandMine: 			{ name: 'Land Mine',			size: 1,	color: Colors.Red },
-				ForceField: 		{ name: 'Force Field',			size: 2,	color: Colors.LightGrey },
+				ForceField: 		{ name: 'Force Field',			size: 2,	color: Colors.Red },
 				Annihilator: 		{ name: 'Annihilator',			size: 1,	color: Colors.Red },
 				MissilePit: 		{ name: 'Missile Pit',			size: 1,	color: Colors.Red },
-				RadioactiveTrap: 	{ name: 'Radioactive Trap',		size: 0,	color: Colors.Red },
-				GravityTrap: 		{ name: 'Gravity Trap',			size: 0,	color: Colors.Red },
-				PulseTower: 		{ name: 'Pulse Tower',			size: 0,	color: Colors.Red },
-				ShieldGenerator:	{ name: 'Shield Generator',		size: 0,	color: Colors.Red },
+				RadioactiveTrap: 	{ name: 'Radioactive Trap',		size: 0,	color: Colors.Blue },
+				GravityTrap: 		{ name: 'Gravity Trap',			size: 0,	color: Colors.Blue },
+				PulseTower: 		{ name: 'Pulse Tower',			size: 0,	color: Colors.Blue },
+				ShieldGenerator:	{ name: 'Shield Generator',		size: 0,	color: Colors.Blue },
 				Wall: 				{ name: 'Wall',					size: 1,	color: Colors.LightGrey },
 				// Terrain
 				Crater2: 			{ name: 'Crater',				size: 2,	color: Colors.Purple },
@@ -72,15 +80,16 @@
 				Volcano3: 			{ name: 'Volcano',				size: 3,	color: Colors.Purple },
 			};
 
-			var inventory = [
-				{ building: "GaussCannon",	top: 20,	left: 20 },
-				{ building: "TrainingCamp",	top: 120,	left: 80 },
-				{ building: "Wall",			top: 40,	left: 100 },
-			];
+			// var inventory = [
+			// 	{ building: "GaussCannon",	top: 20,	left: 20 },
+			// 	{ building: "TrainingCamp",	top: 120,	left: 80 },
+			// 	{ building: "Wall",			top: 40,	left: 100 },
+			// ];
 
 			var canvas = null;
-			var size = 0;
 			var grid = null;
+			var $output = null;
+			var size = 0;
 			var cellSize = 20;
 
 			$(function () {
@@ -100,12 +109,39 @@
 				size = Math.max(canvas.width, canvas.height);
 
 				drawGrid();
-				loadItems(inventory);
+				// loadItems(inventory);
+
+				addItem(Buildings.CommandCenter, 1);
+				addItem(Buildings.ClanCitidel, 1);
+				addItem(Buildings.ConstructionShop, 3);
+				addItem(Buildings.TitaniumMine, 5);
+				addItem(Buildings.TitaniumStorage, 2);
+				addItem(Buildings.HeliumSeparator, 5);
+				addItem(Buildings.HeliumStorage, 2);
+				addItem(Buildings.MilitaryPlant, 3);
+				addItem(Buildings.TrainingCamp, 3);
+				addItem(Buildings.NanobotFactory, 1);
+				addItem(Buildings.ScienceLab, 1);
+				addItem(Buildings.HerosOutpost, 1);
+				addItem(Buildings.GaussCannon, 4);
+				addItem(Buildings.PlasmaGun, 2);
+				addItem(Buildings.MissileLauncher, 1);
+				addItem(Buildings.LaserTurret, 4);
+				addItem(Buildings.ProtonEmitter, 1);
+				addItem(Buildings.LandMine, 4);
+				addItem(Buildings.ForceField, 2);
+				addItem(Buildings.Annihilator, 2);
+				addItem(Buildings.MissilePit, 2);
+				// addItem(Buildings.RadioactiveTrap, 0);
+				// addItem(Buildings.GravityTrap, 0);
+				// addItem(Buildings.PulseTower, 0);
+				// addItem(Buildings.ShieldGenerator, 0);
+				addItem(Buildings.Wall, 125);
 
 				// tools
-				var $output = $("#output");
-				$("button#export").click(() => $output.text(JSON.stringify(exportItems())));
-				$("button#load").click(() => loadItems(JSON.parse($output.text())));
+				$output = $("#output");
+				$("button#export").click(() => $output.val(JSON.stringify(exportItems())));
+				$("button#load").click(() => loadItems(JSON.parse($output.val())));
 
 			});
 
@@ -120,12 +156,23 @@
 				}
 			}
 
-			function addItem(buildingKey) {
-				loadItem({
-					building: buildingKey,
-					top: 0,
-					left: 0,
-				});
+			function addItem(buildingKey, count = 1) {
+				if (typeof buildingKey === 'object')
+					if (!buildingKey.name)
+						return;
+					else
+						// because _.findKey(Building, buildingKey) when buildingKey is null/undefined will return first key of Buildings
+						buildingKey = _.findKey(Buildings, { name: buildingKey.name });
+
+				if (!buildingKey)
+					throw "unknown building";
+
+				for (var i in _.range(count))
+					loadItem({
+						building: buildingKey,
+						top: 0,
+						left: 0,
+					});
 			}
 
 			function loadItems(items) {
@@ -152,13 +199,19 @@
 					hasControls: false, // no resize/rotate
 				});
 
-				text = new fabric.Text(building.name, {
+				text = new fabric.Text(building.name.replace(' ','\n'), {
 					top: 0,
 					left: 0,
 					// fontSize: 10,
 					fontWeight: 300,
 					fontFamily: "Helvetica",
-					fill: "white",
+					fill: Colors.White.name,
+					shadow: {
+						color: Colors.Black.name,
+						offsetX: 2,
+						offsetY: 2,
+						// blur: 4,
+					},
 				});
 				text.scaleToWidth(rect.width);
 
@@ -215,31 +268,36 @@
 				var delta = opt.e.deltaY;
 				var zoom = canvas.getZoom();
 
+				// zoom speed
 				zoom = zoom - delta/1000;
 
-				if (zoom > 20) zoom = 20;
-				if (zoom < 0.01) zoom = 0.01;
+				// max zoom
+				if (zoom > 2) zoom = 2;
+				if (zoom < 0.2) zoom = 0.2;
 
 				canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
+
 				opt.e.preventDefault();
 				opt.e.stopPropagation();
 
-				var vpt = this.viewportTransform;
-				if (zoom < 400 / 1000) {
-					this.viewportTransform[4] = 200 - 1000 * zoom / 2;
-					this.viewportTransform[5] = 200 - 1000 * zoom / 2;
-				}
-				else {
-					if (vpt[4] >= 0)
-						this.viewportTransform[4] = 0;
-					else if (vpt[4] < canvas.getWidth() - 1000 * zoom)
-						this.viewportTransform[4] = canvas.getWidth() - 1000 * zoom;
+				// var vpt = this.viewportTransform;
+				// if (zoom < 400 / 1000) {
+				// 	this.viewportTransform[4] = 200 - (1000 * zoom / 2); // horiz
+				// 	this.viewportTransform[5] = 200 - (1000 * zoom / 2); // vert
+				// }
+				// else {
+				// 	// horiz
+				// 	if (vpt[4] >= 0)
+				// 		this.viewportTransform[4] = 0;
+				// 	else if (vpt[4] < canvas.getWidth() - 1000 * zoom)
+				// 		this.viewportTransform[4] = canvas.getWidth() - 1000 * zoom;
 
-					if (vpt[5] >= 0)
-						this.viewportTransform[5] = 0;
-					else if (vpt[5] < canvas.getHeight() - 1000 * zoom)
-						this.viewportTransform[5] = canvas.getHeight() - 1000 * zoom;
-				}
+				// 	// vert
+				// 	if (vpt[5] >= 0)
+				// 		this.viewportTransform[5] = 0;
+				// 	else if (vpt[5] < canvas.getHeight() - 1000 * zoom)
+				// 		this.viewportTransform[5] = canvas.getHeight() - 1000 * zoom;
+				// }
 
 				updateObjectPositions();
 			}
@@ -262,8 +320,8 @@
 					return;
 
 				var e = opt.e;
-				this.viewportTransform[4] += e.clientX - this.lastPosX;
-				this.viewportTransform[5] += e.clientY - this.lastPosY;
+				this.viewportTransform[4] += e.clientX - this.lastPosX; // horiz
+				this.viewportTransform[5] += e.clientY - this.lastPosY; // vert
 				this.requestRenderAll();
 				this.lastPosX = e.clientX;
 				this.lastPosY = e.clientY;
@@ -282,6 +340,22 @@
 					.map(o => o.my)
 					.value();
 			}
+
+			/*
+
+			// test
+			[{"building":"GaussCannon","top":20,"left":20},{"building":"TrainingCamp","top":120,"left":80},{"building":"Wall","top":40,"left":100},{"building":"ConstructionShop","top":100,"left":480},{"building":"ConstructionShop","top":280,"left":60},{"building":"ConstructionShop","top":160,"left":320},{"building":"ConstructionShop","top":120,"left":200},{"building":"ConstructionShop","top":160,"left":40},{"building":"ConstructionShop","top":60,"left":360}]
+
+			// everything splayed out
+			[{"building":"CommandCenter","top":300,"left":300},{"building":"ClanCitidel","top":380,"left":620},{"building":"ConstructionShop","top":380,"left":700},{"building":"ConstructionShop","top":380,"left":740},{"building":"ConstructionShop","top":380,"left":780},{"building":"TitaniumMine","top":300,"left":860},{"building":"TitaniumMine","top":300,"left":800},{"building":"TitaniumMine","top":300,"left":740},{"building":"TitaniumMine","top":300,"left":680},{"building":"TitaniumMine","top":300,"left":620},{"building":"TitaniumStorage","top":220,"left":680},{"building":"TitaniumStorage","top":220,"left":620},{"building":"HeliumSeparator","top":60,"left":860},{"building":"HeliumSeparator","top":60,"left":800},{"building":"HeliumSeparator","top":60,"left":740},{"building":"HeliumSeparator","top":60,"left":680},{"building":"HeliumSeparator","top":60,"left":620},{"building":"HeliumStorage","top":140,"left":620},{"building":"HeliumStorage","top":140,"left":680},{"building":"MilitaryPlant","top":60,"left":300},{"building":"MilitaryPlant","top":60,"left":360},{"building":"MilitaryPlant","top":60,"left":420},{"building":"TrainingCamp","top":500,"left":500},{"building":"TrainingCamp","top":500,"left":400},{"building":"TrainingCamp","top":500,"left":300},{"building":"NanobotFactory","top":320,"left":480},{"building":"ScienceLab","top":400,"left":300},{"building":"HerosOutpost","top":320,"left":400},{"building":"GaussCannon","top":140,"left":480},{"building":"GaussCannon","top":140,"left":420},{"building":"GaussCannon","top":140,"left":360},{"building":"GaussCannon","top":140,"left":300},{"building":"PlasmaGun","top":420,"left":460},{"building":"PlasmaGun","top":420,"left":400},{"building":"MissileLauncher","top":420,"left":540},{"building":"LaserTurret","top":220,"left":480},{"building":"LaserTurret","top":220,"left":420},{"building":"LaserTurret","top":220,"left":360},{"building":"LaserTurret","top":220,"left":300},{"building":"ProtonEmitter","top":520,"left":620},{"building":"LandMine","top":80,"left":580},{"building":"LandMine","top":80,"left":560},{"building":"LandMine","top":60,"left":580},{"building":"LandMine","top":60,"left":560},{"building":"ForceField","top":460,"left":660},{"building":"ForceField","top":460,"left":620},{"building":"Annihilator","top":100,"left":520},{"building":"Annihilator","top":100,"left":500},{"building":"MissilePit","top":60,"left":520},{"building":"MissilePit","top":60,"left":500},{"building":"Wall","top":280,"left":100},{"building":"Wall","top":280,"left":80},{"building":"Wall","top":280,"left":60},{"building":"Wall","top":280,"left":40},{"building":"Wall","top":280,"left":120},{"building":"Wall","top":260,"left":220},{"building":"Wall","top":240,"left":220},{"building":"Wall","top":240,"left":200},{"building":"Wall","top":220,"left":200},{"building":"Wall","top":260,"left":200},{"building":"Wall","top":260,"left":180},{"building":"Wall","top":260,"left":160},{"building":"Wall","top":240,"left":160},{"building":"Wall","top":260,"left":140},{"building":"Wall","top":260,"left":80},{"building":"Wall","top":260,"left":100},{"building":"Wall","top":160,"left":220},{"building":"Wall","top":180,"left":200},{"building":"Wall","top":180,"left":220},{"building":"Wall","top":200,"left":180},{"building":"Wall","top":220,"left":180},{"building":"Wall","top":220,"left":120},{"building":"Wall","top":220,"left":80},{"building":"Wall","top":240,"left":60},{"building":"Wall","top":140,"left":200},{"building":"Wall","top":160,"left":180},{"building":"Wall","top":160,"left":160},{"building":"Wall","top":120,"left":180},{"building":"Wall","top":140,"left":120},{"building":"Wall","top":160,"left":120},{"building":"Wall","top":180,"left":120},{"building":"Wall","top":160,"left":80},{"building":"Wall","top":180,"left":60},{"building":"Wall","top":200,"left":60},{"building":"Wall","top":200,"left":100},{"building":"Wall","top":220,"left":140},{"building":"Wall","top":240,"left":140},{"building":"Wall","top":240,"left":100},{"building":"Wall","top":260,"left":120},{"building":"Wall","top":240,"left":80},{"building":"Wall","top":120,"left":200},{"building":"Wall","top":120,"left":220},{"building":"Wall","top":180,"left":140},{"building":"Wall","top":140,"left":160},{"building":"Wall","top":120,"left":140},{"building":"Wall","top":80,"left":200},{"building":"Wall","top":100,"left":200},{"building":"Wall","top":80,"left":220},{"building":"Wall","top":80,"left":180},{"building":"Wall","top":200,"left":220},{"building":"Wall","top":200,"left":200},{"building":"Wall","top":220,"left":100},{"building":"Wall","top":240,"left":180},{"building":"Wall","top":180,"left":180},{"building":"Wall","top":200,"left":160},{"building":"Wall","top":220,"left":220},{"building":"Wall","top":220,"left":160},{"building":"Wall","top":180,"left":80},{"building":"Wall","top":100,"left":160},{"building":"Wall","top":100,"left":140},{"building":"Wall","top":100,"left":100},{"building":"Wall","top":120,"left":120},{"building":"Wall","top":140,"left":180},{"building":"Wall","top":120,"left":80},{"building":"Wall","top":180,"left":100},{"building":"Wall","top":200,"left":80},{"building":"Wall","top":160,"left":100},{"building":"Wall","top":180,"left":160},{"building":"Wall","top":200,"left":140},{"building":"Wall","top":240,"left":120},{"building":"Wall","top":200,"left":120},{"building":"Wall","top":220,"left":60},{"building":"Wall","top":260,"left":60},{"building":"Wall","top":260,"left":40},{"building":"Wall","top":240,"left":40},{"building":"Wall","top":220,"left":40},{"building":"Wall","top":200,"left":40},{"building":"Wall","top":180,"left":40},{"building":"Wall","top":140,"left":40},{"building":"Wall","top":120,"left":60},{"building":"Wall","top":160,"left":40},{"building":"Wall","top":100,"left":40},{"building":"Wall","top":100,"left":60},{"building":"Wall","top":100,"left":220},{"building":"Wall","top":120,"left":100},{"building":"Wall","top":140,"left":140},{"building":"Wall","top":140,"left":220},{"building":"Wall","top":160,"left":200},{"building":"Wall","top":100,"left":180},{"building":"Wall","top":100,"left":120},{"building":"Wall","top":160,"left":60},{"building":"Wall","top":140,"left":60},{"building":"Wall","top":160,"left":140},{"building":"Wall","top":100,"left":80},{"building":"Wall","top":120,"left":40},{"building":"Wall","top":120,"left":160},{"building":"Wall","top":140,"left":80},{"building":"Wall","top":140,"left":100},{"building":"Wall","top":80,"left":160},{"building":"Wall","top":80,"left":140},{"building":"Wall","top":80,"left":120},{"building":"Wall","top":80,"left":100},{"building":"Wall","top":80,"left":80},{"building":"Wall","top":80,"left":60},{"building":"Wall","top":80,"left":40},{"building":"Wall","top":40,"left":220},{"building":"Wall","top":40,"left":200},{"building":"Wall","top":40,"left":180},{"building":"Wall","top":40,"left":160},{"building":"Wall","top":40,"left":140},{"building":"Wall","top":40,"left":120},{"building":"Wall","top":40,"left":100},{"building":"Wall","top":40,"left":80},{"building":"Wall","top":40,"left":60},{"building":"Wall","top":40,"left":40},{"building":"Wall","top":60,"left":220},{"building":"Wall","top":60,"left":200},{"building":"Wall","top":60,"left":180},{"building":"Wall","top":60,"left":160},{"building":"Wall","top":60,"left":140},{"building":"Wall","top":60,"left":120},{"building":"Wall","top":60,"left":100},{"building":"Wall","top":60,"left":80},{"building":"Wall","top":60,"left":60},{"building":"Wall","top":60,"left":40}]
+
+			// WIP: flower
+			[{"building":"CommandCenter","top":280,"left":640},{"building":"ClanCitidel","top":400,"left":880},{"building":"ConstructionShop","top":400,"left":960},{"building":"ConstructionShop","top":400,"left":1000},{"building":"ConstructionShop","top":400,"left":1040},{"building":"TitaniumMine","top":320,"left":1120},{"building":"TitaniumMine","top":460,"left":600},{"building":"TitaniumMine","top":240,"left":480},{"building":"TitaniumMine","top":120,"left":700},{"building":"TitaniumMine","top":340,"left":820},{"building":"TitaniumStorage","top":380,"left":680},{"building":"TitaniumStorage","top":200,"left":620},{"building":"HeliumSeparator","top":80,"left":1120},{"building":"HeliumSeparator","top":460,"left":700},{"building":"HeliumSeparator","top":120,"left":600},{"building":"HeliumSeparator","top":240,"left":820},{"building":"HeliumSeparator","top":340,"left":480},{"building":"HeliumStorage","top":320,"left":560},{"building":"HeliumStorage","top":260,"left":740},{"building":"MilitaryPlant","top":60,"left":300},{"building":"MilitaryPlant","top":60,"left":360},{"building":"MilitaryPlant","top":60,"left":420},{"building":"TrainingCamp","top":500,"left":260},{"building":"TrainingCamp","top":500,"left":160},{"building":"TrainingCamp","top":500,"left":60},{"building":"NanobotFactory","top":320,"left":280},{"building":"ScienceLab","top":400,"left":300},{"building":"HerosOutpost","top":320,"left":400},{"building":"GaussCannon","top":180,"left":540},{"building":"GaussCannon","top":140,"left":380},{"building":"GaussCannon","top":400,"left":760},{"building":"GaussCannon","top":140,"left":300},{"building":"PlasmaGun","top":320,"left":740},{"building":"PlasmaGun","top":260,"left":560},{"building":"MissileLauncher","top":400,"left":540},{"building":"LaserTurret","top":200,"left":680},{"building":"LaserTurret","top":380,"left":620},{"building":"LaserTurret","top":240,"left":300},{"building":"LaserTurret","top":240,"left":400},{"building":"ProtonEmitter","top":180,"left":760},{"building":"LandMine","top":80,"left":580},{"building":"LandMine","top":80,"left":560},{"building":"LandMine","top":60,"left":580},{"building":"LandMine","top":60,"left":560},{"building":"ForceField","top":480,"left":920},{"building":"ForceField","top":480,"left":880},{"building":"Annihilator","top":100,"left":520},{"building":"Annihilator","top":100,"left":500},{"building":"MissilePit","top":60,"left":520},{"building":"MissilePit","top":60,"left":500},{"building":"Wall","top":440,"left":680},{"building":"Wall","top":440,"left":660},{"building":"Wall","top":440,"left":640},{"building":"Wall","top":440,"left":620},{"building":"Wall","top":440,"left":700},{"building":"Wall","top":260,"left":540},{"building":"Wall","top":360,"left":800},{"building":"Wall","top":360,"left":540},{"building":"Wall","top":340,"left":540},{"building":"Wall","top":440,"left":720},{"building":"Wall","top":220,"left":740},{"building":"Wall","top":260,"left":160},{"building":"Wall","top":220,"left":520},{"building":"Wall","top":260,"left":140},{"building":"Wall","top":260,"left":80},{"building":"Wall","top":260,"left":100},{"building":"Wall","top":280,"left":800},{"building":"Wall","top":300,"left":540},{"building":"Wall","top":300,"left":800},{"building":"Wall","top":220,"left":600},{"building":"Wall","top":180,"left":740},{"building":"Wall","top":420,"left":520},{"building":"Wall","top":220,"left":80},{"building":"Wall","top":240,"left":60},{"building":"Wall","top":360,"left":720},{"building":"Wall","top":180,"left":600},{"building":"Wall","top":440,"left":600},{"building":"Wall","top":120,"left":180},{"building":"Wall","top":200,"left":820},{"building":"Wall","top":220,"left":820},{"building":"Wall","top":180,"left":680},{"building":"Wall","top":160,"left":80},{"building":"Wall","top":180,"left":620},{"building":"Wall","top":200,"left":60},{"building":"Wall","top":200,"left":100},{"building":"Wall","top":420,"left":820},{"building":"Wall","top":440,"left":820},{"building":"Wall","top":240,"left":100},{"building":"Wall","top":260,"left":120},{"building":"Wall","top":240,"left":80},{"building":"Wall","top":340,"left":720},{"building":"Wall","top":340,"left":620},{"building":"Wall","top":180,"left":700},{"building":"Wall","top":420,"left":600},{"building":"Wall","top":400,"left":740},{"building":"Wall","top":300,"left":720},{"building":"Wall","top":320,"left":720},{"building":"Wall","top":300,"left":620},{"building":"Wall","top":380,"left":600},{"building":"Wall","top":320,"left":800},{"building":"Wall","top":320,"left":540},{"building":"Wall","top":220,"left":100},{"building":"Wall","top":200,"left":740},{"building":"Wall","top":200,"left":600},{"building":"Wall","top":180,"left":520},{"building":"Wall","top":340,"left":800},{"building":"Wall","top":200,"left":520},{"building":"Wall","top":180,"left":640},{"building":"Wall","top":380,"left":780},{"building":"Wall","top":380,"left":760},{"building":"Wall","top":160,"left":820},{"building":"Wall","top":180,"left":820},{"building":"Wall","top":360,"left":700},{"building":"Wall","top":460,"left":560},{"building":"Wall","top":180,"left":660},{"building":"Wall","top":200,"left":80},{"building":"Wall","top":160,"left":100},{"building":"Wall","top":180,"left":720},{"building":"Wall","top":400,"left":820},{"building":"Wall","top":440,"left":520},{"building":"Wall","top":400,"left":520},{"building":"Wall","top":220,"left":60},{"building":"Wall","top":260,"left":60},{"building":"Wall","top":260,"left":40},{"building":"Wall","top":240,"left":40},{"building":"Wall","top":220,"left":40},{"building":"Wall","top":200,"left":40},{"building":"Wall","top":180,"left":40},{"building":"Wall","top":460,"left":760},{"building":"Wall","top":460,"left":540},{"building":"Wall","top":160,"left":40},{"building":"Wall","top":160,"left":760},{"building":"Wall","top":160,"left":780},{"building":"Wall","top":320,"left":620},{"building":"Wall","top":460,"left":580},{"building":"Wall","top":420,"left":740},{"building":"Wall","top":260,"left":800},{"building":"Wall","top":280,"left":540},{"building":"Wall","top":380,"left":800},{"building":"Wall","top":380,"left":740},{"building":"Wall","top":160,"left":60},{"building":"Wall","top":460,"left":780},{"building":"Wall","top":440,"left":740},{"building":"Wall","top":160,"left":800},{"building":"Wall","top":460,"left":520},{"building":"Wall","top":400,"left":600},{"building":"Wall","top":460,"left":800},{"building":"Wall","top":460,"left":820},{"building":"Wall","top":380,"left":580},{"building":"Wall","top":380,"left":560},{"building":"Wall","top":380,"left":540},{"building":"Wall","top":160,"left":580},{"building":"Wall","top":160,"left":560},{"building":"Wall","top":160,"left":540},{"building":"Wall","top":160,"left":520},{"building":"Wall","top":360,"left":680},{"building":"Wall","top":360,"left":660},{"building":"Wall","top":360,"left":640},{"building":"Wall","top":360,"left":620},{"building":"Wall","top":260,"left":720},{"building":"Wall","top":260,"left":700},{"building":"Wall","top":260,"left":680},{"building":"Wall","top":260,"left":660},{"building":"Wall","top":260,"left":640},{"building":"Wall","top":260,"left":620},{"building":"Wall","top":280,"left":620},{"building":"Wall","top":280,"left":720},{"building":"Wall","top":240,"left":600},{"building":"Wall","top":240,"left":580},{"building":"Wall","top":240,"left":560},{"building":"Wall","top":240,"left":540},{"building":"Wall","top":240,"left":800},{"building":"Wall","top":240,"left":780},{"building":"Wall","top":240,"left":760},{"building":"Wall","top":240,"left":740}]
+
+			// WIP:
+			[{"building":"CommandCenter","top":240,"left":660},{"building":"ClanCitidel","top":380,"left":880},{"building":"ConstructionShop","top":380,"left":960},{"building":"ConstructionShop","top":380,"left":1000},{"building":"ConstructionShop","top":380,"left":1040},{"building":"TitaniumMine","top":220,"left":1100},{"building":"TitaniumMine","top":180,"left":820},{"building":"TitaniumMine","top":320,"left":520},{"building":"TitaniumMine","top":400,"left":620},{"building":"TitaniumMine","top":100,"left":720},{"building":"TitaniumStorage","top":220,"left":1020},{"building":"TitaniumStorage","top":220,"left":960},{"building":"HeliumSeparator","top":140,"left":1100},{"building":"HeliumSeparator","top":300,"left":820},{"building":"HeliumSeparator","top":200,"left":520},{"building":"HeliumSeparator","top":400,"left":740},{"building":"HeliumSeparator","top":100,"left":600},{"building":"HeliumStorage","top":140,"left":960},{"building":"HeliumStorage","top":140,"left":1020},{"building":"MilitaryPlant","top":0,"left":220},{"building":"MilitaryPlant","top":0,"left":280},{"building":"MilitaryPlant","top":0,"left":340},{"building":"TrainingCamp","top":500,"left":500},{"building":"TrainingCamp","top":500,"left":400},{"building":"TrainingCamp","top":500,"left":300},{"building":"NanobotFactory","top":240,"left":300},{"building":"ScienceLab","top":400,"left":300},{"building":"HerosOutpost","top":320,"left":400},{"building":"GaussCannon","top":260,"left":520},{"building":"GaussCannon","top":400,"left":680},{"building":"GaussCannon","top":180,"left":740},{"building":"GaussCannon","top":320,"left":600},{"building":"PlasmaGun","top":240,"left":600},{"building":"PlasmaGun","top":260,"left":740},{"building":"MissileLauncher","top":180,"left":680},{"building":"LaserTurret","top":240,"left":820},{"building":"LaserTurret","top":180,"left":600},{"building":"LaserTurret","top":100,"left":660},{"building":"LaserTurret","top":320,"left":740},{"building":"ProtonEmitter","top":320,"left":660},{"building":"LandMine","top":80,"left":980},{"building":"LandMine","top":80,"left":960},{"building":"LandMine","top":60,"left":980},{"building":"LandMine","top":60,"left":960},{"building":"ForceField","top":60,"left":1060},{"building":"ForceField","top":60,"left":1020},{"building":"Annihilator","top":100,"left":920},{"building":"Annihilator","top":100,"left":900},{"building":"MissilePit","top":60,"left":920},{"building":"MissilePit","top":60,"left":900},{"building":"Wall","top":160,"left":780},{"building":"Wall","top":380,"left":800},{"building":"Wall","top":380,"left":780},{"building":"Wall","top":360,"left":500},{"building":"Wall","top":160,"left":800},{"building":"Wall","top":380,"left":580},{"building":"Wall","top":360,"left":580},{"building":"Wall","top":340,"left":800},{"building":"Wall","top":320,"left":800},{"building":"Wall","top":360,"left":800},{"building":"Wall","top":460,"left":600},{"building":"Wall","top":460,"left":800},{"building":"Wall","top":440,"left":800},{"building":"Wall","top":320,"left":720},{"building":"Wall","top":300,"left":600},{"building":"Wall","top":300,"left":620},{"building":"Wall","top":280,"left":580},{"building":"Wall","top":280,"left":800},{"building":"Wall","top":300,"left":580},{"building":"Wall","top":400,"left":600},{"building":"Wall","top":420,"left":600},{"building":"Wall","top":240,"left":780},{"building":"Wall","top":240,"left":740},{"building":"Wall","top":300,"left":880},{"building":"Wall","top":240,"left":800},{"building":"Wall","top":120,"left":580},{"building":"Wall","top":120,"left":780},{"building":"Wall","top":80,"left":580},{"building":"Wall","top":160,"left":860},{"building":"Wall","top":380,"left":540},{"building":"Wall","top":360,"left":860},{"building":"Wall","top":380,"left":500},{"building":"Wall","top":240,"left":880},{"building":"Wall","top":260,"left":880},{"building":"Wall","top":340,"left":880},{"building":"Wall","top":200,"left":660},{"building":"Wall","top":220,"left":660},{"building":"Wall","top":360,"left":720},{"building":"Wall","top":300,"left":640},{"building":"Wall","top":340,"left":720},{"building":"Wall","top":220,"left":800},{"building":"Wall","top":240,"left":580},{"building":"Wall","top":360,"left":880},{"building":"Wall","top":100,"left":780},{"building":"Wall","top":180,"left":560},{"building":"Wall","top":180,"left":800},{"building":"Wall","top":200,"left":800},{"building":"Wall","top":200,"left":580},{"building":"Wall","top":80,"left":740},{"building":"Wall","top":320,"left":580},{"building":"Wall","top":300,"left":800},{"building":"Wall","top":240,"left":760},{"building":"Wall","top":440,"left":600},{"building":"Wall","top":140,"left":580},{"building":"Wall","top":400,"left":800},{"building":"Wall","top":340,"left":580},{"building":"Wall","top":420,"left":800},{"building":"Wall","top":360,"left":820},{"building":"Wall","top":460,"left":760},{"building":"Wall","top":460,"left":740},{"building":"Wall","top":460,"left":700},{"building":"Wall","top":180,"left":540},{"building":"Wall","top":100,"left":580},{"building":"Wall","top":180,"left":500},{"building":"Wall","top":360,"left":840},{"building":"Wall","top":460,"left":620},{"building":"Wall","top":380,"left":520},{"building":"Wall","top":140,"left":780},{"building":"Wall","top":180,"left":660},{"building":"Wall","top":280,"left":180},{"building":"Wall","top":80,"left":760},{"building":"Wall","top":280,"left":880},{"building":"Wall","top":320,"left":880},{"building":"Wall","top":340,"left":500},{"building":"Wall","top":320,"left":500},{"building":"Wall","top":300,"left":500},{"building":"Wall","top":280,"left":500},{"building":"Wall","top":260,"left":500},{"building":"Wall","top":220,"left":500},{"building":"Wall","top":180,"left":880},{"building":"Wall","top":240,"left":500},{"building":"Wall","top":460,"left":640},{"building":"Wall","top":460,"left":660},{"building":"Wall","top":220,"left":580},{"building":"Wall","top":180,"left":520},{"building":"Wall","top":160,"left":880},{"building":"Wall","top":260,"left":580},{"building":"Wall","top":260,"left":800},{"building":"Wall","top":460,"left":780},{"building":"Wall","top":460,"left":720},{"building":"Wall","top":220,"left":880},{"building":"Wall","top":200,"left":880},{"building":"Wall","top":380,"left":560},{"building":"Wall","top":460,"left":680},{"building":"Wall","top":200,"left":500},{"building":"Wall","top":80,"left":780},{"building":"Wall","top":160,"left":820},{"building":"Wall","top":160,"left":840},{"building":"Wall","top":80,"left":720},{"building":"Wall","top":80,"left":700},{"building":"Wall","top":80,"left":680},{"building":"Wall","top":80,"left":660},{"building":"Wall","top":80,"left":640},{"building":"Wall","top":80,"left":620},{"building":"Wall","top":80,"left":600},{"building":"Wall","top":160,"left":760},{"building":"Wall","top":160,"left":740},{"building":"Wall","top":160,"left":720},{"building":"Wall","top":160,"left":700},{"building":"Wall","top":160,"left":680},{"building":"Wall","top":160,"left":660},{"building":"Wall","top":160,"left":640},{"building":"Wall","top":160,"left":620},{"building":"Wall","top":160,"left":600},{"building":"Wall","top":160,"left":580},{"building":"Wall","top":180,"left":580},{"building":"Wall","top":380,"left":760},{"building":"Wall","top":380,"left":740},{"building":"Wall","top":380,"left":720},{"building":"Wall","top":380,"left":700},{"building":"Wall","top":380,"left":680},{"building":"Wall","top":380,"left":660},{"building":"Wall","top":380,"left":640},{"building":"Wall","top":380,"left":620},{"building":"Wall","top":380,"left":600}]
+
+			*/
 
 		</script>
 
